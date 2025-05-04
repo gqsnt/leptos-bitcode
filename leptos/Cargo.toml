@@ -83,6 +83,10 @@ ssr = [
 ]
 nightly = ["leptos_macro/nightly", "reactive_graph/nightly", "tachys/nightly"]
 rkyv = ["server_fn/rkyv", "leptos_server/rkyv"]
+bitcode = [
+  "server_fn/bitcode",
+  "leptos_server/bitcode",
+]
 tracing = [
   "dep:tracing",
   "reactive_graph/tracing",
@@ -121,6 +125,7 @@ denylist = [
   "default-tls",
   "wasm-bindgen",
   "rkyv",                  # was causing clippy issues on nightly
+  "bitcode",
   "trace-component-props",
   "spin",
   "islands",

@@ -38,6 +38,10 @@ impl From<ServerFnError> for Error {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
+#[cfg_attr(
+    feature = "bitcode",
+    derive(bitcode::Encode, bitcode::Decode)
+)]
 #[deprecated(
     since = "0.8.0",
     note = "Now server_fn can return any error type other than ServerFnError, \
@@ -166,6 +170,10 @@ impl<E> ViaError<E> for WrapError<E> {
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
+#[cfg_attr(
+    feature = "bitcode",
+    derive(bitcode::Encode, bitcode::Decode)
 )]
 pub enum ServerFnError<E = NoCustomError> {
     #[deprecated(

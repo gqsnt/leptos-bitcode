@@ -20,6 +20,7 @@ rustversion = { workspace = true}
 # used across multiple features
 serde = { version = "1.0", features = ["derive"] }
 send_wrapper = { version = "0.6.0", features = ["futures"], optional = true }
+bitcode = {version = "0.6.6", optional = true}
 thiserror = { workspace = true }
 
 # registration system
@@ -111,6 +112,7 @@ serde-lite = ["dep:serde-lite"]
 multipart = ["browser", "dep:multer"]
 cbor = ["dep:ciborium"]
 rkyv = ["dep:rkyv"]
+bitcode = ["dep:bitcode"]
 msgpack = ["dep:rmp-serde"]
 postcard = ["dep:postcard"]
 default-tls = ["reqwest?/default-tls"]

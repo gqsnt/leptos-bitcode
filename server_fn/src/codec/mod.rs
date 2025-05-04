@@ -32,6 +32,12 @@ mod rkyv;
 #[cfg(feature = "rkyv")]
 pub use rkyv::*;
 
+
+#[cfg(feature = "bitcode")]
+mod bitcode;
+#[cfg(feature = "bitcode")]
+pub use bitcode::*;
+
 mod url;
 pub use url::*;
 
@@ -57,6 +63,7 @@ pub use post::*;
 mod put;
 pub use put::*;
 mod stream;
+
 use crate::ContentType;
 use futures::Future;
 use http::Method;
