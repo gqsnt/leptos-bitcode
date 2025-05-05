@@ -342,12 +342,6 @@ impl ServerFnCall {
                     Clone, #server_fn_path::rkyv::Archive, #server_fn_path::rkyv::Serialize, #server_fn_path::rkyv::Deserialize
                 },
             ),
-            Some("Bincode") => (
-                PathInfo::Bincode,
-                quote! {
-                Clone, #server_fn_path::bincode::Encode, #server_fn_path::bincode::Decode
-            },
-            ),
             Some("MultipartFormData")
             | Some("Streaming")
             | Some("StreamingText") => (PathInfo::None, quote! {}),
@@ -377,14 +371,14 @@ impl ServerFnCall {
             },
         };
         let addl_path = match path {
-            PathInfo::Serde => {
+            PathInfo::Bincode
+            |PathInfo::Serde => {
                 let serde_path = self.serde_path();
                 quote! {
                     #[serde(crate = #serde_path)]
                 }
             }
             PathInfo::Rkyv => quote! {},
-            PathInfo::Bincode => quote! {},
             PathInfo::None => quote! {},
         };
 
