@@ -331,7 +331,7 @@ impl ServerFnCall {
         enum PathInfo {
             Serde,
             Rkyv,
-            Bitcode,
+            Bincode,
             None,
         }
 
@@ -342,10 +342,10 @@ impl ServerFnCall {
                     Clone, #server_fn_path::rkyv::Archive, #server_fn_path::rkyv::Serialize, #server_fn_path::rkyv::Deserialize
                 },
             ),
-            Some("Bitcode") => (
-                PathInfo::Bitcode,
+            Some("Bincode") => (
+                PathInfo::Bincode,
                 quote! {
-                Clone, #server_fn_path::bitcode::Encode, #server_fn_path::bitcode::Decode
+                Clone, #server_fn_path::bincode::Encode, #server_fn_path::bincode::Decode
             },
             ),
             Some("MultipartFormData")
@@ -384,7 +384,7 @@ impl ServerFnCall {
                 }
             }
             PathInfo::Rkyv => quote! {},
-            PathInfo::Bitcode => quote! {},
+            PathInfo::Bincode => quote! {},
             PathInfo::None => quote! {},
         };
 

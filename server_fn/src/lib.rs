@@ -157,8 +157,8 @@ use request::Req;
 use response::{ClientRes, Res, TryRes};
 #[cfg(feature = "rkyv")]
 pub use rkyv;
-#[cfg(feature = "bitcode")]
-pub use bitcode;
+#[cfg(feature = "bincode")]
+pub use bincode;
 #[doc(hidden)]
 pub use serde;
 #[doc(hidden)]

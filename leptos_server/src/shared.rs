@@ -1,8 +1,8 @@
 use crate::{FromEncodedStr, IntoEncodedString};
 #[cfg(feature = "rkyv")]
 use codee::binary::RkyvCodec;
-#[cfg(feature = "bitcode")]
-use codee::binary::BitcodeCodec;
+#[cfg(feature = "bincode")]
+use codee::binary::BincodeSerdeCodec;
 #[cfg(feature = "serde-wasm-bindgen")]
 use codee::string::JsonSerdeWasmCodec;
 #[cfg(feature = "miniserde")]
@@ -170,15 +170,15 @@ where
 }
 
 
-#[cfg(feature = "bitcode")]
-impl<T> SharedValue<T, BitcodeCodec>
+#[cfg(feature = "bincode")]
+impl<T> SharedValue<T, BincodeSerdeCodec>
 where
-    BitcodeCodec: Encoder<T> + Decoder<T>,
-    <BitcodeCodec as Encoder<T>>::Error: Debug,
-    <BitcodeCodec as Decoder<T>>::Error: Debug,
-    <BitcodeCodec as Encoder<T>>::Encoded: IntoEncodedString,
-    <BitcodeCodec as Decoder<T>>::Encoded: FromEncodedStr,
-    <<BitcodeCodec as codee::Decoder<T>>::Encoded as FromEncodedStr>::DecodingError:
+    BincodeSerdeCodec: Encoder<T> + Decoder<T>,
+    <BincodeSerdeCodec as Encoder<T>>::Error: Debug,
+    <BincodeSerdeCodec as Decoder<T>>::Error: Debug,
+    <BincodeSerdeCodec as Encoder<T>>::Encoded: IntoEncodedString,
+    <BincodeSerdeCodec as Decoder<T>>::Encoded: FromEncodedStr,
+    <<BincodeSerdeCodec as codee::Decoder<T>>::Encoded as FromEncodedStr>::DecodingError:
     Debug,
 {
     /// Wraps the initial value.
@@ -186,8 +186,8 @@ where
     /// If this is on the server, the function will be invoked and the value serialized. When it runs
     /// on the client, it will be deserialized without running the function again.
     ///
-    /// This uses the [`BitcodeCodec`] encoding.
-    pub fn new_bitcode(initial: impl FnOnce() -> T) -> Self {
+    /// This uses the [`BincodeSerdeCodec`] encoding.
+    pub fn new_bincode(initial: impl FnOnce() -> T) -> Self {
         SharedValue::new_with_encoding(initial)
     }
 }

@@ -33,10 +33,10 @@ mod rkyv;
 pub use rkyv::*;
 
 
-#[cfg(feature = "bitcode")]
-mod bitcode;
-#[cfg(feature = "bitcode")]
-pub use bitcode::*;
+#[cfg(feature = "bincode")]
+mod bincode;
+#[cfg(feature = "bincode")]
+pub use bincode::*;
 
 mod url;
 pub use url::*;

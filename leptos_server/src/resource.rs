@@ -1,8 +1,8 @@
 use crate::{FromEncodedStr, IntoEncodedString};
 #[cfg(feature = "rkyv")]
 use codee::binary::RkyvCodec;
-#[cfg(feature = "bitcode")]
-use codee::binary::BitcodeCodec;
+#[cfg(feature = "bincode")]
+use codee::binary::BincodeSerdeCodec;
 #[cfg(feature = "serde-wasm-bindgen")]
 use codee::string::JsonSerdeWasmCodec;
 #[cfg(feature = "miniserde")]
@@ -745,19 +745,19 @@ where
 }
 
 
-#[cfg(feature = "bitcode")]
-impl<T> Resource<T, BitcodeCodec>
+#[cfg(feature = "bincode")]
+impl<T> Resource<T, BincodeSerdeCodec>
 where
-    BitcodeCodec: Encoder<T> + Decoder<T>,
-    <BitcodeCodec as Encoder<T>>::Error: Debug,
-    <BitcodeCodec as Decoder<T>>::Error: Debug,
-    <<BitcodeCodec as Decoder<T>>::Encoded as FromEncodedStr>::DecodingError:
+    BincodeSerdeCodec: Encoder<T> + Decoder<T>,
+    <BincodeSerdeCodec as Encoder<T>>::Error: Debug,
+    <BincodeSerdeCodec as Decoder<T>>::Error: Debug,
+    <<BincodeSerdeCodec as Decoder<T>>::Encoded as FromEncodedStr>::DecodingError:
     Debug,
-    <BitcodeCodec as Encoder<T>>::Encoded: IntoEncodedString,
-    <BitcodeCodec as Decoder<T>>::Encoded: FromEncodedStr,
+    <BincodeSerdeCodec as Encoder<T>>::Encoded: IntoEncodedString,
+    <BincodeSerdeCodec as Decoder<T>>::Encoded: FromEncodedStr,
     T: Send + Sync,
 {
-    /// Creates a new resource with the encoding [`BitcodeCodec`].
+    /// Creates a new resource with the encoding [`BincodeSerdeCodec`].
     ///
     /// This takes a `source` function and a `fetcher`. The resource memoizes and reactively tracks
     /// the value returned by `source`. Whenever that value changes, it will run the `fetcher` to
@@ -766,7 +766,7 @@ where
     /// On creation, if you are on the server, this will run the `fetcher` once to generate
     /// a `Future` whose value will be serialized from the server to the client. If you are on
     /// the client, the initial value will be deserialized without re-running that async task.
-    pub fn new_bitcode<S, Fut>(
+    pub fn new_bincode<S, Fut>(
         source: impl Fn() -> S + Send + Sync + 'static,
         fetcher: impl Fn(S) -> Fut + Send + Sync + 'static,
     ) -> Self
@@ -778,7 +778,7 @@ where
         Resource::new_with_options(source, fetcher, false)
     }
 
-    /// Creates a new blocking resource with the encoding [`RkyvCodec`].
+    /// Creates a new blocking resource with the encoding [`BincodeSerdeCodec`].
     ///
     /// This takes a `source` function and a `fetcher`. The resource memoizes and reactively tracks
     /// the value returned by `source`. Whenever that value changes, it will run the `fetcher` to
@@ -791,7 +791,7 @@ where
     /// Blocking resources prevent any of the HTTP response from being sent until they have loaded.
     /// This is useful if you need their data to set HTML document metadata or information that
     /// needs to appear in HTTP headers.
-    pub fn new_bitcode_blocking<S, Fut>(
+    pub fn new_bincode_blocking<S, Fut>(
         source: impl Fn() -> S + Send + Sync + 'static,
         fetcher: impl Fn(S) -> Fut + Send + Sync + 'static,
     ) -> Self
