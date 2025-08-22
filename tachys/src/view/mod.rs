@@ -278,6 +278,19 @@ where
         position: &PositionState,
     ) -> Self::State;
 
+    /// Asynchronously makes a set of DOM nodes rendered from HTML interactive.
+    ///
+    /// Async hydration is useful for types that may need to wait before being hydrated:
+    /// for example, lazily-loaded routes need async hydration, because the client code
+    /// may be loading asynchronously, while the server HTML was already rendered.
+    fn hydrate_async(
+        self,
+        cursor: &Cursor,
+        position: &PositionState,
+    ) -> impl Future<Output = Self::State> {
+        async { self.hydrate::<true>(cursor, position) }
+    }
+
     /// Hydrates using [`RenderHtml::hydrate`], beginning at the given element.
     fn hydrate_from<const FROM_SERVER: bool>(
         self,
@@ -318,6 +331,16 @@ pub trait Mountable {
         parent: &crate::renderer::types::Element,
         marker: Option<&crate::renderer::types::Node>,
     );
+
+    /// Mounts a node to the interface. Returns `false` if it could not be mounted.
+    fn try_mount(
+        &mut self,
+        parent: &crate::renderer::types::Element,
+        marker: Option<&crate::renderer::types::Node>,
+    ) -> bool {
+        self.mount(parent, marker);
+        true
+    }
 
     /// Inserts another `Mountable` type before this one. Returns `false` if
     /// this does not actually exist in the UI (for example, `()`).
@@ -427,6 +450,17 @@ pub trait ToTemplate {
         inner_html: &mut String,
         position: &mut Position,
     );
+
+    /// Renders a view type to a template in attribute position.
+    fn to_template_attribute(
+        buf: &mut String,
+        class: &mut String,
+        style: &mut String,
+        inner_html: &mut String,
+        position: &mut Position,
+    ) {
+        Self::to_template(buf, class, style, inner_html, position);
+    }
 }
 
 /// Keeps track of what position the item currently being hydrated is in, relative to its siblings
@@ -476,7 +510,7 @@ pub enum Position {
     LastChild,
 }
 
-/// Declares that this type can be converted into some other type, which can be renderered.
+/// Declares that this type can be converted into some other type, which can be rendered.
 pub trait IntoRender {
     /// The renderable type into which this type can be converted.
     type Output;

@@ -473,7 +473,7 @@ impl IntoClass for Arc<str> {
 
     fn rebuild(self, state: &mut Self::State) {
         let (el, prev) = state;
-        if !Arc::ptr_eq(&self, prev) {
+        if self != *prev {
             Rndr::set_attribute(el, "class", &self);
         }
         *prev = self;
@@ -540,11 +540,20 @@ impl IntoClass for (&'static str, bool) {
     fn rebuild(self, state: &mut Self::State) {
         let (name, include) = self;
         let (class_list, prev_include, prev_name) = state;
-        if include != *prev_include {
+        if name == *prev_name {
+            if include != *prev_include {
+                if include {
+                    Rndr::add_class(class_list, name);
+                } else {
+                    Rndr::remove_class(class_list, name);
+                }
+            }
+        } else {
+            if *prev_include {
+                Rndr::remove_class(class_list, prev_name);
+            }
             if include {
                 Rndr::add_class(class_list, name);
-            } else {
-                Rndr::remove_class(class_list, name);
             }
         }
         *prev_include = include;

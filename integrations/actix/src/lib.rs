@@ -38,7 +38,6 @@ use leptos_router::{
     static_routes::{RegenerationFn, ResolvedStaticPath},
     ExpandOptionals, Method, PathSegment, RouteList, RouteListing, SsrMode,
 };
-use once_cell::sync::Lazy;
 use parking_lot::RwLock;
 use send_wrapper::SendWrapper;
 use server_fn::{
@@ -51,7 +50,7 @@ use std::{
     future::Future,
     ops::{Deref, DerefMut},
     path::Path,
-    sync::Arc,
+    sync::{Arc, LazyLock},
 };
 
 /// This struct lets you define headers and override the status of the Response from an Element or a Server Function
@@ -283,6 +282,7 @@ pub fn redirect(path: &str) {
 ///   // call ServerFn::register() for each of the server functions you've defined
 /// }
 ///
+/// # #[cfg(feature = "default")]
 /// #[actix_web::main]
 /// async fn main() -> std::io::Result<()> {
 ///     // make sure you actually register your server functions
@@ -298,6 +298,8 @@ pub fn redirect(path: &str) {
 ///     .run()
 ///     .await
 /// }
+/// # #[cfg(not(feature = "default"))]
+/// # fn main() {}
 /// ```
 ///
 /// ## Provided Context Types
@@ -443,6 +445,7 @@ pub fn handle_server_fns_with_context(
 ///     view! { <main>"Hello, world!"</main> }
 /// }
 ///
+/// # #[cfg(feature = "default")]
 /// #[actix_web::main]
 /// async fn main() -> std::io::Result<()> {
 ///     let conf = get_configuration(Some("Cargo.toml")).unwrap();
@@ -462,6 +465,8 @@ pub fn handle_server_fns_with_context(
 ///     .run()
 ///     .await
 /// }
+/// # #[cfg(not(feature = "default"))]
+/// # fn main() {}
 /// ```
 ///
 /// ## Provided Context Types
@@ -500,6 +505,7 @@ where
 ///     view! { <main>"Hello, world!"</main> }
 /// }
 ///
+/// # #[cfg(feature = "default")]
 /// #[actix_web::main]
 /// async fn main() -> std::io::Result<()> {
 ///     let conf = get_configuration(Some("Cargo.toml")).unwrap();
@@ -522,6 +528,9 @@ where
 ///     .run()
 ///     .await
 /// }
+///
+/// # #[cfg(not(feature = "default"))]
+/// # fn main() {}
 /// ```
 ///
 /// ## Provided Context Types
@@ -558,6 +567,7 @@ where
 ///     view! { <main>"Hello, world!"</main> }
 /// }
 ///
+/// # #[cfg(feature = "default")]
 /// #[actix_web::main]
 /// async fn main() -> std::io::Result<()> {
 ///     let conf = get_configuration(Some("Cargo.toml")).unwrap();
@@ -577,6 +587,8 @@ where
 ///     .run()
 ///     .await
 /// }
+/// # #[cfg(not(feature = "default"))]
+/// # fn main() {}
 /// ```
 ///
 /// ## Provided Context Types
@@ -1210,8 +1222,8 @@ impl StaticRouteGenerator {
     }
 }
 
-static STATIC_HEADERS: Lazy<DashMap<String, ResponseOptions>> =
-    Lazy::new(DashMap::new);
+static STATIC_HEADERS: LazyLock<DashMap<String, ResponseOptions>> =
+    LazyLock::new(DashMap::new);
 
 fn was_404(owner: &Owner) -> bool {
     let resp = owner.with(|| expect_context::<ResponseOptions>());

@@ -329,7 +329,6 @@ where
     fn build(self) -> Self::State {
         let el = Rndr::create_element(self.tag.tag(), E::NAMESPACE);
 
-        let attrs = self.attributes.build(&el);
         let children = if E::SELF_CLOSING {
             None
         } else {
@@ -337,6 +336,9 @@ where
             children.mount(&el, None);
             Some(children)
         };
+
+        let attrs = self.attributes.build(&el);
+
         ElementState {
             el,
             attrs,
@@ -562,6 +564,77 @@ where
         }
     }
 
+    async fn hydrate_async(
+        self,
+        cursor: &Cursor,
+        position: &PositionState,
+    ) -> Self::State {
+        // codegen optimisation:
+        fn inner_1(
+            cursor: &Cursor,
+            position: &PositionState,
+            tag_name: &str,
+            #[cfg(any(debug_assertions, leptos_debuginfo))]
+            defined_at: &'static std::panic::Location<'static>,
+        ) -> crate::renderer::types::Element {
+            #[cfg(any(debug_assertions, leptos_debuginfo))]
+            {
+                set_currently_hydrating(Some(defined_at));
+            }
+
+            let curr_position = position.get();
+            if curr_position == Position::FirstChild {
+                cursor.child();
+            } else if curr_position != Position::Current {
+                cursor.sibling();
+            }
+            crate::renderer::types::Element::cast_from(cursor.current())
+                .unwrap_or_else(|| {
+                    failed_to_cast_element(tag_name, cursor.current())
+                })
+        }
+        let el = inner_1(
+            cursor,
+            position,
+            E::TAG,
+            #[cfg(any(debug_assertions, leptos_debuginfo))]
+            self.defined_at,
+        );
+
+        let attrs = self.attributes.hydrate::<true>(&el);
+
+        // hydrate children
+        let children = if !Ch::EXISTS || !E::ESCAPE_CHILDREN {
+            None
+        } else {
+            position.set(Position::FirstChild);
+            Some(self.children.hydrate_async(cursor, position).await)
+        };
+
+        // codegen optimisation:
+        fn inner_2(
+            cursor: &Cursor,
+            position: &PositionState,
+            el: &crate::renderer::types::Element,
+        ) {
+            // go to next sibling
+            cursor.set(
+                <crate::renderer::types::Element as AsRef<
+                    crate::renderer::types::Node,
+                >>::as_ref(el)
+                .clone(),
+            );
+            position.set(Position::NextChild);
+        }
+        inner_2(cursor, position, &el);
+
+        ElementState {
+            el,
+            attrs,
+            children,
+        }
+    }
+
     fn into_owned(self) -> Self::Owned {
         HtmlElement {
             #[cfg(any(debug_assertions, leptos_debuginfo))]
@@ -638,6 +711,14 @@ impl<At, Ch> Mountable for ElementState<At, Ch> {
         Rndr::insert_node(parent, self.el.as_ref(), marker);
     }
 
+    fn try_mount(
+        &mut self,
+        parent: &crate::renderer::types::Element,
+        marker: Option<&crate::renderer::types::Node>,
+    ) -> bool {
+        Rndr::try_insert_node(parent, self.el.as_ref(), marker)
+    }
+
     fn insert_before_this(&self, child: &mut dyn Mountable) -> bool {
         if let Some(parent) = Rndr::get_parent(self.el.as_ref()) {
             if let Some(element) =
@@ -699,7 +780,7 @@ where
 
             buf.push('<');
             buf.push_str(E::TAG);
-            <At as ToTemplate>::to_template(
+            <At as ToTemplate>::to_template_attribute(
                 buf,
                 &mut class,
                 &mut style,

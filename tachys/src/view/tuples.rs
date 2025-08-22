@@ -103,6 +103,15 @@ impl ToTemplate for () {
     ) {
         buf.push_str("<!>");
     }
+
+    fn to_template_attribute(
+        _buf: &mut String,
+        _class: &mut String,
+        _style: &mut String,
+        _inner_html: &mut String,
+        _position: &mut Position,
+    ) {
+    }
 }
 
 impl<A: Render> Render for (A,) {
@@ -125,6 +134,7 @@ where
     type Owned = (A::Owned,);
 
     const MIN_LENGTH: usize = A::MIN_LENGTH;
+    const EXISTS: bool = A::EXISTS;
 
     fn html_len(&self) -> usize {
         self.0.html_len()
@@ -172,6 +182,14 @@ where
         position: &PositionState,
     ) -> Self::State {
         self.0.hydrate::<FROM_SERVER>(cursor, position)
+    }
+
+    async fn hydrate_async(
+        self,
+        cursor: &Cursor,
+        position: &PositionState,
+    ) -> Self::State {
+        self.0.hydrate_async(cursor, position).await
     }
 
     async fn resolve(self) -> Self::AsyncOutput {
@@ -230,7 +248,6 @@ macro_rules! impl_view_for_tuples {
 		{
 			type State = ($first::State, $($ty::State,)*);
 
-
 			fn build(self) -> Self::State {
                 #[allow(non_snake_case)]
                 let ($first, $($ty,)*) = self;
@@ -258,7 +275,7 @@ macro_rules! impl_view_for_tuples {
 		{
             type AsyncOutput = ($first::AsyncOutput, $($ty::AsyncOutput,)*);
             type Owned = ($first::Owned, $($ty::Owned,)*);
-
+            const EXISTS: bool = $first::EXISTS || $($ty::EXISTS || )* false;
             const MIN_LENGTH: usize = $first::MIN_LENGTH $(+ $ty::MIN_LENGTH)*;
 
             #[inline(always)]
@@ -304,6 +321,15 @@ macro_rules! impl_view_for_tuples {
 					(
 						$first.hydrate::<FROM_SERVER>(cursor, position),
 						$($ty.hydrate::<FROM_SERVER>(cursor, position)),*
+					)
+			}
+
+            async fn hydrate_async(self, cursor: &Cursor, position: &PositionState) -> Self::State {
+                #[allow(non_snake_case)]
+					let ($first, $($ty,)* ) = self;
+					(
+						$first.hydrate_async(cursor, position).await,
+						$($ty.hydrate_async(cursor, position).await),*
 					)
 			}
 

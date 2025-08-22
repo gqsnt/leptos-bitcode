@@ -647,7 +647,7 @@ impl ServerFnCall {
             quote! {
                 vec![
                     #(
-                        std::sync::Arc::new(#middlewares),
+                        std::sync::Arc::new(#middlewares)
                     ),*
                 ]
             }
@@ -1527,7 +1527,10 @@ impl Parse for ServerFnBody {
                     true
                 }
             } else {
-                true
+                // in ssr mode, remove the "lazy" macro
+                // the lazy macro doesn't do anything on the server anyway, but it can cause confusion for rust-analyzer
+                // when the lazy macro is applied to both the function and the dummy
+                !(cfg!(feature = "ssr") && matches!(attr.meta.path().segments.last(), Some(PathSegment { ident, .. }) if ident == "lazy") )
             }
         });
 

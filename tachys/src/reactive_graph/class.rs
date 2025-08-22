@@ -209,20 +209,31 @@ where
 
     fn rebuild(self, state: &mut Self::State) {
         let (name, mut f) = self;
+
+        let prev_name = state.name;
+        let prev_state = state.effect.take_value();
+        if let Some((list, prev_include)) = &prev_state {
+            if prev_name != name && *prev_include {
+                Rndr::remove_class(list, prev_name);
+            }
+        }
+
         // Name might've updated:
         state.name = name;
+        let mut first_run = true;
         state.effect = RenderEffect::new_with_value(
             move |prev| {
                 let include = *f.invoke().borrow();
                 match prev {
                     Some((class_list, prev)) => {
                         if include {
-                            if !prev {
+                            if !prev || first_run {
                                 Rndr::add_class(&class_list, name);
                             }
                         } else if prev {
                             Rndr::remove_class(&class_list, name);
                         }
+                        first_run = false;
                         (class_list.clone(), include)
                     }
                     None => {
@@ -230,7 +241,7 @@ where
                     }
                 }
             },
-            state.effect.take_value(),
+            prev_state,
         );
     }
 
