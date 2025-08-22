@@ -3292,7 +3292,7 @@ dependencies = [
 
 [[package]]
 name = "server_fn"
-version = "0.8.6"
+version = "0.8.5"
 dependencies = [
  "actix-web",
  "actix-ws",
