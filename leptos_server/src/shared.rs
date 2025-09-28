@@ -82,6 +82,7 @@ where
 }
 
 #[cfg(feature = "serde-lite")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde-lite")))]
 impl<T> SharedValue<T, SerdeLite<JsonSerdeCodec>>
 where
     SerdeLite<JsonSerdeCodec>: Encoder<T> + Decoder<T>,
@@ -104,6 +105,7 @@ where
 }
 
 #[cfg(feature = "serde-wasm-bindgen")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde-wasm-bindgen")))]
 impl<T> SharedValue<T, JsonSerdeWasmCodec>
 where
     JsonSerdeWasmCodec: Encoder<T> + Decoder<T>,
@@ -126,6 +128,7 @@ where
 }
 
 #[cfg(feature = "miniserde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "miniserde")))]
 impl<T> SharedValue<T, MiniserdeCodec>
 where
     MiniserdeCodec: Encoder<T> + Decoder<T>,
@@ -148,6 +151,7 @@ where
 }
 
 #[cfg(feature = "rkyv")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rkyv")))]
 impl<T> SharedValue<T, RkyvCodec>
 where
     RkyvCodec: Encoder<T> + Decoder<T>,

@@ -711,6 +711,7 @@ where
 }
 
 #[cfg(feature = "rkyv")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rkyv")))]
 impl<T> ArcResource<T, RkyvCodec>
 where
     RkyvCodec: Encoder<T> + Decoder<T>,
@@ -1110,6 +1111,7 @@ where
 }
 
 #[cfg(feature = "serde-wasm-bindgen")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde-wasm-bindgen")))]
 impl<T> Resource<T, JsonSerdeWasmCodec>
 where
     JsonSerdeWasmCodec: Encoder<T> + Decoder<T>,
@@ -1167,6 +1169,7 @@ where
 }
 
 #[cfg(feature = "miniserde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "miniserde")))]
 impl<T> Resource<T, MiniserdeCodec>
 where
     MiniserdeCodec: Encoder<T> + Decoder<T>,
@@ -1226,6 +1229,7 @@ where
 }
 
 #[cfg(feature = "serde-lite")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde-lite")))]
 impl<T> Resource<T, SerdeLite<JsonSerdeCodec>>
 where
     SerdeLite<JsonSerdeCodec>: Encoder<T> + Decoder<T>,
@@ -1284,6 +1288,7 @@ where
 }
 
 #[cfg(feature = "rkyv")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rkyv")))]
 impl<T> Resource<T, RkyvCodec>
 where
     RkyvCodec: Encoder<T> + Decoder<T>,
