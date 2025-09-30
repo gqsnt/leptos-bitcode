@@ -131,7 +131,7 @@ actix-ws = { default-features = false, version = "0.3.0" }
 tower-http = { default-features = false, version = "0.6.4" }
 prettyplease = { default-features = false, version = "0.2.37" }
 inventory = { default-features = false, version = "0.3.21" }
-config = { default-features = false, git="https://github.com/gqsnt/config-rs-convert_case-0.8.0", rev = "a863beff2ee098748d2b104f5ecda9e887d034e4" }
+config = { default-features = false, git="https://github.com/gqsnt/config-rs-convert_case-0.8.0", rev = "8a9fbaf1bbfd20ea28086197f193d6f9f33df58b" }
 camino = { default-features = false, version = "1.1.11" }
 ciborium = { default-features = false, version = "0.2.2" }
 multer = { default-features = false, version = "3.1.0" }
