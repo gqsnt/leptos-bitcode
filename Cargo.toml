@@ -76,7 +76,7 @@ wasm_split_macros = { path = "./wasm_split_macros", version = "0.1.3" }
 # members deps
 async-once-cell = { default-features = false, version = "0.5.3" }
 itertools = { default-features = false, version = "0.14.0" }
-convert_case = { git="https://github.com/gqsnt/convert-case-last-rust-version", rev = "0640778c72cdf55c00b29744976d50e7000ebe71", optional = true }
+convert_case = { git="https://github.com/gqsnt/convert-case-last-rust-version", rev = "0640778c72cdf55c00b29744976d50e7000ebe71"}
 serde_json = { default-features = false, version = "1.0.145" }
 trybuild = { default-features = false, version = "1.0.110" }
 typed-builder = { default-features = false, version = "0.21.2" }
