@@ -1,4 +1,4 @@
-use bitcode::{Encode, Decode};
+use bitcode::{Encode, Decode, DecodeOwned};
 use crate::{ContentType, Decodes, Encodes, Format, FormatType};
 use bytes::Bytes;
 use serde::de::DeserializeOwned;
@@ -17,18 +17,18 @@ impl FormatType for BitcodeEncoding {
 
 impl<T> Encodes<T> for BitcodeEncoding
 where
-    T: Serialize,
+    T: Encode,
 {
     type Error = bitcode::Error;
 
     fn encode(value: &T) -> Result<Bytes, Self::Error> {
-        Ok(Bytes::from(bitcode::encode(value)?))
+        Ok(Bytes::from(bitcode::encode(value)))
     }
 }
 
 impl<T> Decodes<T> for BitcodeEncoding
 where
-    T: DeserializeOwned,
+    T: DecodeOwned,
 {
     type Error = bitcode::Error;
 
