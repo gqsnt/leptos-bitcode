@@ -520,6 +520,42 @@ where
     }
 }
 
+
+
+#[cfg(feature = "bitcode")]
+#[cfg_attr(docsrs, doc(cfg(feature = "bitcode")))]
+impl<T> ArcOnceResource<T, BitcodeCodec>
+where
+    T: Send + Sync + 'static,
+    BitcodeCodec: Encoder<T> + Decoder<T>,
+    <BitcodeCodec as Encoder<T>>::Error: Debug,
+    <BitcodeCodec as Decoder<T>>::Error: Debug,
+    <<BitcodeCodec as Decoder<T>>::Encoded as FromEncodedStr>::DecodingError:
+    Debug,
+    <BitcodeCodec as Encoder<T>>::Encoded: IntoEncodedString,
+    <BitcodeCodec as Decoder<T>>::Encoded: FromEncodedStr,
+{
+    /// Creates a resource using [`RkyvCodec`] for encoding/decoding the value.
+    #[track_caller]
+    pub fn new_bitcode(fut: impl Future<Output = T> + Send + 'static) -> Self {
+        ArcOnceResource::new_with_options(fut, false)
+    }
+
+    /// Creates a blocking resource using [`RkyvCodec`] for encoding/decoding the value.
+    ///
+    /// Blocking resources prevent any of the HTTP response from being sent until they have loaded.
+    /// This is useful if you need their data to set HTML document metadata or information that
+    /// needs to appear in HTTP headers.
+    #[track_caller]
+    pub fn new_bitcode_blocking(
+        fut: impl Future<Output = T> + Send + 'static,
+    ) -> Self {
+        ArcOnceResource::new_with_options(fut, true)
+    }
+}
+
+
+
 /// A resource that only loads once.
 ///
 /// Resources allow asynchronously loading data and serializing it from the server to the client,

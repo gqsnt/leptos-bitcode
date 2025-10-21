@@ -201,6 +201,42 @@ mod rkyv {
 #[cfg(feature = "rkyv")]
 pub use rkyv::*;
 
+#[cfg(feature = "bitcode")]
+mod bitcode {
+    use base64::Engine;
+    use base64::engine::general_purpose::STANDARD_NO_PAD;
+    use serde::de::DeserializeOwned;
+    use serde::Serialize;
+    use server_fn::bitcode;
+    use server_fn::bitcode::{Decode, Encode};
+    use crate::serializers::{SerializableData, Serializer};
+
+    pub struct Bitcode;
+
+    impl Serializer for Bitcode {}
+
+    impl<T> SerializableData<Bitcode> for T
+    where
+        T: Encode + Decode,
+    {
+        type SerErr = bitcode::Error;
+        type DeErr = bitcode::Error;
+
+        fn ser(&self) -> Result<String, Self::SerErr> {
+            let bytes = bitcode::encode(&self);
+            Ok(STANDARD_NO_PAD.encode(bytes))
+        }
+
+        fn de(data: &str) -> Result<Self, Self::DeErr> {
+            let bytes = STANDARD_NO_PAD.decode(data.as_bytes())?;
+            bitcode::decode(&bytes)
+        }
+    }
+}
+
+#[cfg(feature = "bitcode")]
+pub use bitcode::*;
+
 
 
 
