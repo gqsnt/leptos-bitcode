@@ -160,7 +160,7 @@ reqwest = { default-features = false, version = "0.12.23" }
 tower-layer = { default-features = false, version = "0.3.3" }
 attribute-derive = { default-features = false, version = "0.10.5" }
 insta = { default-features = false, version = "1.43.1" }
-codee = { default-features = false, version = "0.3.0" }
+codee = { default-features = false, git="https://github.com/gqsnt/codee_bitcode", rev = "2f2f0e84c26658c039fbca4892a9098cb04a0d77" }
 actix-http = { default-features = false, version = "3.11.2" }
 wasm-bindgen-test = { default-features = false, version = "0.3.50" }
 rustversion = { default-features = false, version = "1.0.22" }

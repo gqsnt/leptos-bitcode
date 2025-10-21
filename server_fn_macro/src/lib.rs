@@ -331,7 +331,7 @@ impl ServerFnCall {
         enum PathInfo {
             Serde,
             Rkyv,
-            Bincode,
+            Bitcode,
             None,
         }
 
@@ -371,7 +371,7 @@ impl ServerFnCall {
             },
         };
         let addl_path = match path {
-            PathInfo::Bincode
+            PathInfo::Bitcode
             |PathInfo::Serde => {
                 let serde_path = self.serde_path();
                 quote! {

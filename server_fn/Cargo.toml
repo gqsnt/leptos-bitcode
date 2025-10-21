@@ -25,7 +25,7 @@ send_wrapper = { features = [
   "futures",
 ], optional = true, workspace = true, default-features = true }
 thiserror = { workspace = true, default-features = true }
-bincode = { version = "1",optional = true }
+bitcode = { version = "0.6.7",optional = true }
 
 # registration system
 inventory = { optional = true, workspace = true, default-features = true }
@@ -125,7 +125,7 @@ serde-lite = ["dep:serde-lite"]
 multipart = ["browser", "dep:multer"]
 cbor = ["dep:ciborium"]
 rkyv = ["dep:rkyv"]
-bincode = ["dep:bincode"]
+bitcode= ["dep:bitcode"]
 msgpack = ["dep:rmp-serde"]
 postcard = ["dep:postcard"]
 default-tls = ["reqwest?/default-tls"]

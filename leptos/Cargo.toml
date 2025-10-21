@@ -88,9 +88,9 @@ ssr = [
 ]
 nightly = ["leptos_macro/nightly", "reactive_graph/nightly", "tachys/nightly"]
 rkyv = ["server_fn/rkyv", "leptos_server/rkyv"]
-bincode = [
-  "server_fn/bincode",
-  "leptos_server/bincode",
+bitcode = [
+  "server_fn/bitcode",
+  "leptos_server/bitcode",
 ]
 serde-lite = ["server_fn/serde-lite", "leptos_server/serde-lite"]
 cbor = ["server_fn/cbor"]
@@ -153,7 +153,7 @@ denylist = [
   "default-tls",
   "wasm-bindgen",
   "rkyv",                  # was causing clippy issues on nightly
-  "bincode",
+  "bitcode",
   "trace-component-props",
   "spin",
   "islands",

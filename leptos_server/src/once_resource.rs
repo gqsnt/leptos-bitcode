@@ -4,8 +4,8 @@ use crate::{
 };
 #[cfg(feature = "rkyv")]
 use codee::binary::RkyvCodec;
-#[cfg(feature = "bincode")]
-use codee::binary::BincodeSerdeCodec;
+#[cfg(feature = "bitcode")]
+use codee::binary::BitcodeCodec;
 #[cfg(feature = "serde-wasm-bindgen")]
 use codee::string::JsonSerdeWasmCodec;
 #[cfg(feature = "miniserde")]
@@ -887,31 +887,31 @@ where
 }
 
 
-#[cfg(feature = "bincode")]
-impl<T> OnceResource<T, BincodeSerdeCodec>
+#[cfg(feature = "bitcode")]
+impl<T> OnceResource<T, BitcodeCodec>
 where
     T: Send + Sync + 'static,
-    BincodeSerdeCodec: Encoder<T> + Decoder<T>,
-    <BincodeSerdeCodec as Encoder<T>>::Error: Debug,
-    <BincodeSerdeCodec as Decoder<T>>::Error: Debug,
-    <<BincodeSerdeCodec as Decoder<T>>::Encoded as FromEncodedStr>::DecodingError:
+    BitcodeCodec: Encoder<T> + Decoder<T>,
+    <BitcodeCodec as Encoder<T>>::Error: Debug,
+    <BitcodeCodec as Decoder<T>>::Error: Debug,
+    <<BitcodeCodec as Decoder<T>>::Encoded as FromEncodedStr>::DecodingError:
     Debug,
-    <BincodeSerdeCodec as Encoder<T>>::Encoded: IntoEncodedString,
-    <BincodeSerdeCodec as Decoder<T>>::Encoded: FromEncodedStr,
+    <BitcodeCodec as Encoder<T>>::Encoded: IntoEncodedString,
+    <BitcodeCodec as Decoder<T>>::Encoded: FromEncodedStr,
 {
-    /// Creates a resource using [`BincodeSerdeCodec`] for encoding/decoding the value.
+    /// Creates a resource using [`BitcodeCodec`] for encoding/decoding the value.
     #[track_caller]
-    pub fn new_bincode(fut: impl Future<Output = T> + Send + 'static) -> Self {
+    pub fn new_bitcode(fut: impl Future<Output = T> + Send + 'static) -> Self {
         OnceResource::new_with_options(fut, false)
     }
 
-    /// Creates a blocking resource using [`BincodeSerdeCodec`] for encoding/decoding the value.
+    /// Creates a blocking resource using [`BitcodeCodec`] for encoding/decoding the value.
     ///
     /// Blocking resources prevent any of the HTTP response from being sent until they have loaded.
     /// This is useful if you need their data to set HTML document metadata or information that
     /// needs to appear in HTTP headers.
     #[track_caller]
-    pub fn new_bincode_blocking(
+    pub fn new_bitcode_blocking(
         fut: impl Future<Output = T> + Send + 'static,
     ) -> Self {
         OnceResource::new_with_options(fut, true)
