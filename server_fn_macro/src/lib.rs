@@ -347,7 +347,7 @@ impl ServerFnCall {
                 quote! {
                     Clone, #server_fn_path::bitcode::Encode, #server_fn_path::bitcode::Decode
                 },
-                ),
+            ),
             Some("MultipartFormData")
             | Some("Streaming")
             | Some("StreamingText") => (PathInfo::None, quote! {}),
@@ -383,7 +383,7 @@ impl ServerFnCall {
                     #[serde(crate = #serde_path)]
                 }
             }
-            PathInfo::Bitcode => quote!{},
+            PathInfo::Bitcode => quote! {},
             PathInfo::Rkyv => quote! {},
             PathInfo::None => quote! {},
         };

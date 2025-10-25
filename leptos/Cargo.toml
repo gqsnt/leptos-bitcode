@@ -1,6 +1,6 @@
 [package]
 name = "leptos"
-version = "0.8.10"
+version = "0.8.11"
 authors = ["Greg Johnston"]
 license = "MIT"
 repository = "https://github.com/leptos-rs/leptos"
@@ -57,7 +57,7 @@ serde_qs = { workspace = true, default-features = true }
 slotmap = { workspace = true, default-features = true }
 futures = { workspace = true, default-features = true }
 send_wrapper = { workspace = true, default-features = true }
-wasm_split_helpers.workspace = true
+wasm_split_helpers = { workspace = true, default-features = true }
 subsecond = { workspace = true, default-features = true, optional = true }
 dioxus-cli-config = { workspace = true, default-features = true, optional = true }
 dioxus-devtools = { workspace = true, default-features = true, optional = true }
@@ -153,10 +153,10 @@ denylist = [
   "default-tls",
   "wasm-bindgen",
   "rkyv",                  # was causing clippy issues on nightly
-  "bitcode",
   "trace-component-props",
   "spin",
   "islands",
+  "bitcode",
   "serde-lite",
   "cbor",
   "msgpack",
@@ -168,7 +168,6 @@ skip_feature_sets = [
   ["csr", "hydrate"],
   ["ssr", "hydrate"],
   ["serde", "serde-lite"],
-  ["serde-lite", "miniserde"],
   ["serde", "miniserde"],
   ["serde", "rkyv"],
   ["miniserde", "rkyv"],

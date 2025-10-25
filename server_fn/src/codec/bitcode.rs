@@ -1,10 +1,9 @@
+use super::{Patch, Post, Put};
 use bitcode::{Encode, Decode, DecodeOwned};
 use crate::{ContentType, Decodes, Encodes, Format, FormatType};
 use bytes::Bytes;
-use serde::de::DeserializeOwned;
-use serde::Serialize;
 
-/// Encode and Decode Bitcode with [`bitcode`].
+/// Serializes and deserializes with [`bitcode`].
 pub struct BitcodeEncoding;
 
 impl ContentType for BitcodeEncoding {
@@ -19,7 +18,7 @@ impl<T> Encodes<T> for BitcodeEncoding
 where
     T: Encode,
 {
-    type Error = bitcode::Error;
+    type Error = std::convert::Infallible;
 
     fn encode(value: &T) -> Result<Bytes, Self::Error> {
         Ok(Bytes::from(bitcode::encode(value)))
@@ -38,14 +37,14 @@ where
 }
 
 /// Pass arguments and receive responses using `bitcode` in a `POST` request.
-pub type Bitcode = crate::codec::post::Post<BitcodeEncoding>;
+pub type Bitcode = Post<BitcodeEncoding>;
 
 /// Pass arguments and receive responses using `bitcode` in the body of a `PATCH` request.
 /// **Note**: Browser support for `PATCH` requests without JS/WASM may be poor.
 /// Consider using a `POST` request if functionality without JS/WASM is required.
-pub type PatchBitcode = crate::codec::patch::Patch<BitcodeEncoding>;
+pub type PatchBitcode = Patch<BitcodeEncoding>;
 
 /// Pass arguments and receive responses using `bitcode` in the body of a `PUT` request.
 /// **Note**: Browser support for `PUT` requests without JS/WASM may be poor.
 /// Consider using a `POST` request if functionality without JS/WASM is required.
-pub type PutBitcode = crate::codec::put::Put<BitcodeEncoding>;
+pub type PutBitcode = Put<BitcodeEncoding>;
