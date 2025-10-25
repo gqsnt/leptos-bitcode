@@ -25,7 +25,6 @@ send_wrapper = { features = [
   "futures",
 ], optional = true, workspace = true, default-features = true }
 thiserror = { workspace = true, default-features = true }
-bitcode = { version = "0.6.7",optional = true }
 
 # registration system
 inventory = { optional = true, workspace = true, default-features = true }
@@ -129,7 +128,6 @@ rkyv = ["dep:rkyv"]
 bitcode= ["dep:bitcode"]
 msgpack = ["dep:rmp-serde"]
 postcard = ["dep:postcard"]
-bitcode = ["dep:bitcode"]
 default-tls = ["reqwest?/default-tls"]
 rustls = ["reqwest?/rustls-tls", "tokio-tungstenite?/rustls"]
 reqwest = ["dep:reqwest", "dep:tokio-tungstenite", "dep:tokio"]
